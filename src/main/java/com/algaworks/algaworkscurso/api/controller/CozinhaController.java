@@ -4,6 +4,7 @@ import com.algaworks.algaworkscurso.api.model.CozinhasXmlWrapper;
 import com.algaworks.algaworkscurso.domain.model.Cozinha;
 import com.algaworks.algaworkscurso.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,14 @@ public class CozinhaController {
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> buscarResponse(@PathVariable("cozinhaId") Long cozinhaId) {
         Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
-        return ResponseEntity.status(HttpStatus.OK).body(cozinha);
+//        return ResponseEntity.status(HttpStatus.OK).body(cozinha); <-- Correto
+//        return ResponseEntity.ok(cozinha); <-- Correto
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, "http://localhost:8080/cozinhas");
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .headers(headers)
+                .build();
     }
 }
