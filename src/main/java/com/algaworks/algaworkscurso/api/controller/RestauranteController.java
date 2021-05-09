@@ -5,12 +5,15 @@ import com.algaworks.algaworkscurso.domain.exception.EntidadeNaoEncontradaExcept
 import com.algaworks.algaworkscurso.domain.model.Restaurante;
 import com.algaworks.algaworkscurso.domain.repository.RestauranteRepository;
 import com.algaworks.algaworkscurso.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -74,8 +77,22 @@ public class RestauranteController {
         return atualizar(restauranteId,restauranteAtual);
     }
 
-    private void merge(@RequestBody Map<String, Object> campos, Restaurante restauranteAtual) {
-        campos.forEach((chave, valor) -> System.out.println(chave + " = "+valor));
+    private void merge(@RequestBody Map<String, Object> campos, Restaurante restauranteDestino) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Restaurante restauranteOrigem = objectMapper.convertValue(campos, Restaurante.class);
+
+        System.out.println(restauranteOrigem);
+
+        campos.forEach((nomePropriedade, valorPropriedade) -> {
+            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+            field.setAccessible(true);
+
+            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+
+            System.out.println(nomePropriedade + " = " + valorPropriedade + " novoValor =  "+ novoValor);
+
+            ReflectionUtils.setField(field, restauranteDestino, novoValor);
+        });
     }
 
     @DeleteMapping("/{restauranteId}")
