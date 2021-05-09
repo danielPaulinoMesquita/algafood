@@ -4,6 +4,7 @@ import com.algaworks.algaworkscurso.domain.model.Cozinha;
 import com.algaworks.algaworkscurso.domain.repository.CozinhaRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -11,7 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
+@Repository
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @PersistenceContext
@@ -23,6 +24,13 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
                 .createQuery("from Cozinha",Cozinha.class);
 
         return cozinhas.getResultList();
+    }
+
+    public List<Cozinha> buscarPorNome(String nomeCozinha){
+        return entityManager
+                .createQuery("from Cozinha where nome = :nome", Cozinha.class)
+                .setParameter("nome", nomeCozinha)
+                .getResultList();
     }
 
     @Override
