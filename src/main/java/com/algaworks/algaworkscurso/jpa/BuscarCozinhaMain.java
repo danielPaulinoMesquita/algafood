@@ -8,6 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BuscarCozinhaMain {
 
@@ -17,8 +18,8 @@ public class BuscarCozinhaMain {
 
         CozinhaRepository cadastroCozinha = applicationContext.getBean(CozinhaRepository.class);
 
-        Cozinha cozinha = cadastroCozinha.buscar(1L);
+        Optional<Cozinha> cozinha = cadastroCozinha.findById(1L);
 
-        System.out.println("Cozinha: "+cozinha.getId() +"  Nome:"+cozinha.getNome());
+        System.out.println("Cozinha: "+cozinha.get().getId() +"  Nome:"+cozinha.get().getNome());
     }
 }

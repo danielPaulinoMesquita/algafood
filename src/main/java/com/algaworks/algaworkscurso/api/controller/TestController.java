@@ -1,18 +1,16 @@
 package com.algaworks.algaworkscurso.api.controller;
 
 import com.algaworks.algaworkscurso.domain.model.Cozinha;
+import com.algaworks.algaworkscurso.domain.repository.CozinhaRepository;
 import com.algaworks.algaworkscurso.domain.service.CadastroCozinhaService;
-import com.algaworks.algaworkscurso.infrastructure.repository.CozinhaRepositoryImpl;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -23,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 public class TestController {
 
     @Autowired
-    private CozinhaRepositoryImpl cozinhaRepository;
+    private CozinhaRepository cozinhaRepository;
 
     @Autowired
     private CadastroCozinhaService service;
@@ -32,7 +30,7 @@ public class TestController {
     * exemplo de uri com queryParam:  */
     @GetMapping("/cozinhas/por-nome")
     public List<Cozinha> cozinhasPorNome(@RequestParam String nome){
-        return cozinhaRepository.buscarPorNome(nome);
+        return cozinhaRepository.findCozinhaByNome(nome);
     }
 
 

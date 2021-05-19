@@ -18,7 +18,7 @@ public class AlterarCozinhaMain {
         cozinha.setId(1L);
         cozinha.setNome("Brasileira");
 
-        Cozinha cozinhaPersisitido = cadastroCozinha.salvar(cozinha);
+        Cozinha cozinhaPersisitido = cadastroCozinha.save(cozinha);
 
         System.out.printf("%d - %s\n", cozinhaPersisitido.getId(), cozinhaPersisitido.getNome());
     }
