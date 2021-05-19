@@ -12,4 +12,9 @@ public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 
     List<Cozinha> findCozinhaByNome(String nome);
 
+    // Mesmo não colocando a sintaxe padrão de um metodo query Spring, ele vai Funcionar
+    //Porque ele vai pegar o nome da propriedade depois do Prefixo By
+    List<Cozinha> findPeloIdentificadorCozinhaById(Long Id);
+
+
 }

@@ -33,8 +33,16 @@ public class TestController {
         return cozinhaRepository.findCozinhaByNome(nome);
     }
 
+    /*Você pode pegar uma paramentro por QueryString ou QueryParam utilizando o @RequestParam
+     * exemplo de uri com queryParam:  */
+    @GetMapping("/cozinhas/por-id")
+    public List<Cozinha> cozinhasPorNome(Long id){
+        return cozinhaRepository.findPeloIdentificadorCozinhaById(id);
+    }
 
-//    @RequestMapping(value="/zip/{nomeArquivo}", produces="application/zip", method = RequestMethod.GET)
+
+
+    //    @RequestMapping(value="/zip/{nomeArquivo}", produces="application/zip", method = RequestMethod.GET)
     @GetMapping(value="/zip/{nomeArquivo}", produces="application/zip")
     public void zipFiles(HttpServletResponse response, @PathVariable String nomeArquivo) throws IOException {
 
