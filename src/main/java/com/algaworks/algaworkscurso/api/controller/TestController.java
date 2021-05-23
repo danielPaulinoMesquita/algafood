@@ -40,8 +40,6 @@ public class TestController {
         return cozinhaRepository.findPeloIdentificadorCozinhaById(id);
     }
 
-
-
     //    @RequestMapping(value="/zip/{nomeArquivo}", produces="application/zip", method = RequestMethod.GET)
     @GetMapping(value="/zip/{nomeArquivo}", produces="application/zip")
     public void zipFiles(HttpServletResponse response, @PathVariable String nomeArquivo) throws IOException {

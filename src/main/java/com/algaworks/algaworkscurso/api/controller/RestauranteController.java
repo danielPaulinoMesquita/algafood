@@ -14,8 +14,10 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -29,15 +31,15 @@ public class RestauranteController {
 
     @GetMapping
     public List<Restaurante> listar(){
-        return restauranteRepository.listar();
+        return restauranteRepository.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("/{restauranteId}")
     public ResponseEntity<Restaurante> buscarResponse(@PathVariable("restauranteId") Long restauranteId) {
-        Restaurante restaurante = restauranteRepository.buscar(restauranteId);
-        if (restaurante != null)
-            return ResponseEntity.ok(restaurante); // <-- Correto
+        Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
+        if (restaurante.isPresent())
+            return ResponseEntity.ok(restaurante.get()); // <-- Correto
 
         return ResponseEntity.notFound().build();
 
@@ -55,12 +57,12 @@ public class RestauranteController {
 
     @PutMapping("/{restauranteId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurante> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-        Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
-        if (restauranteAtual != null){
+    public ResponseEntity<Restaurante> atualizar(@PathVariable Long restauranteId, @RequestBody Optional<Restaurante> restaurante) {
+        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+        if (restauranteAtual.isPresent()){
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-            cadastroRestauranteService.salvar(restauranteAtual);
-            return ResponseEntity.ok(restauranteAtual);
+            cadastroRestauranteService.salvar(restauranteAtual.get());
+            return ResponseEntity.ok(restauranteAtual.get());
         }
         return ResponseEntity.notFound().build();
     }
@@ -68,8 +70,8 @@ public class RestauranteController {
     @PatchMapping("/{restauranteId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos) {
-        Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
-        if (restauranteAtual == null){
+        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+        if (restauranteAtual.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         merge(campos, restauranteAtual);
@@ -77,7 +79,7 @@ public class RestauranteController {
         return atualizar(restauranteId,restauranteAtual);
     }
 
-    private void merge(@RequestBody Map<String, Object> campos, Restaurante restauranteDestino) {
+    private void merge(@RequestBody Map<String, Object> campos, Optional<Restaurante> restauranteDestino) {
         ObjectMapper objectMapper = new ObjectMapper();
         Restaurante restauranteOrigem = objectMapper.convertValue(campos, Restaurante.class);
 
@@ -105,5 +107,17 @@ public class RestauranteController {
         }catch (EntidadeEmUsoException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+
+    @ResponseStatus(HttpStatus.FOUND)
+    @GetMapping("/por-taxa-frete")
+    public ResponseEntity<List<Restaurante>> buscarResponse(@RequestParam("taxaFreteInicial") BigDecimal taxaFreteInicial,
+                                                      @RequestParam("taxaFreteFinal") BigDecimal taxaFreteFinal) {
+        List<Restaurante> restaurantes = restauranteRepository.findByTaxaFreteBetween(taxaFreteInicial,taxaFreteFinal);
+        if (restaurantes.size() > 0)
+            return ResponseEntity.ok(restaurantes); // <-- Correto
+
+        return ResponseEntity.notFound().build();
+
     }
 }

@@ -19,7 +19,7 @@ public class RestauranteCozinhaMain {
 
         RestauranteRepository cadastroCozinha = applicationContext.getBean(RestauranteRepository.class);
 
-        List<Restaurante> restaurantes = cadastroCozinha.listar();
+        List<Restaurante> restaurantes = cadastroCozinha.findAll();
 
         for(Restaurante restaurante : restaurantes){
             System.out.println("Restaurante: "+restaurante.getNome()+" Cozinha: "+restaurante.getCozinha().getNome());
