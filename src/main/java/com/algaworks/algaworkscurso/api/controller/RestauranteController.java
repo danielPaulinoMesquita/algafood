@@ -120,4 +120,34 @@ public class RestauranteController {
         return ResponseEntity.notFound().build();
 
     }
+
+    @ResponseStatus(HttpStatus.FOUND)
+    @GetMapping("/por-nome-e-cozinha")
+    public ResponseEntity<List<Restaurante>> buscarResponse(@RequestParam("nome") String nome,
+                                                            @RequestParam("CozinhaId") Long id) {
+        List<Restaurante> restaurantes = restauranteRepository.queryByNomeAndCozinha(nome,id);
+        if (restaurantes.size() > 0)
+            return ResponseEntity.ok(restaurantes); // <-- Correto
+
+        return ResponseEntity.notFound().build();
+
+    }
+
+    @ResponseStatus(HttpStatus.FOUND)
+    @GetMapping("/por-nome")
+    public Optional<Restaurante> buscarPrimeiroRestaurante(@RequestParam("nome") String nome) {
+        return restauranteRepository.findFirstByNomeContaining(nome);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/existe")
+    public ResponseEntity<Boolean> existe(@RequestParam("nome") String nome) {
+        return ResponseEntity.ok(restauranteRepository.existsByNome(nome));
+    }
+
+    @ResponseStatus(HttpStatus.FOUND)
+    @GetMapping("/quantidade-restaurante")
+    public long quantidadeRestaurante(@RequestParam("idCozinha") Long id) {
+        return restauranteRepository.countByCozinha_Id(id);
+    }
 }
