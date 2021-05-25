@@ -150,4 +150,16 @@ public class RestauranteController {
     public long quantidadeRestaurante(@RequestParam("idCozinha") Long id) {
         return restauranteRepository.countByCozinha_Id(id);
     }
+
+    @ResponseStatus(HttpStatus.FOUND)
+    @GetMapping("/consultar-nome-e-cozinha")
+    public ResponseEntity<List<Restaurante>> consultarPorNome(String nome, Long  idCozinha){
+        List<Restaurante> restaurantes = restauranteRepository.consultarPorNome(nome, idCozinha);
+
+        if (restaurantes.size() > 0){
+            return ResponseEntity.ok(restaurantes);
+        }else {
+            return new ResponseEntity<>(restaurantes, HttpStatus.NO_CONTENT);
+        }
+    }
 }
