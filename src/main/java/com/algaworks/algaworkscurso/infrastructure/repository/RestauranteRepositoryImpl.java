@@ -1,6 +1,7 @@
 package com.algaworks.algaworkscurso.infrastructure.repository;
 
 import com.algaworks.algaworkscurso.domain.model.Restaurante;
+import com.algaworks.algaworkscurso.domain.repository.RestauranteRepositoryQueries;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -9,11 +10,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public class RestauranteRepositoryImpl {
+public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
     @PersistenceContext
     private EntityManager manager;
 
+    @Override
     public List<Restaurante> find(String nome,
                                   BigDecimal taxaFreteInicial,
                                   BigDecimal taxaFreteFinal){
