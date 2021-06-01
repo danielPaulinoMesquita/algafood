@@ -1,9 +1,7 @@
 package com.algaworks.algaworkscurso.domain.repository;
 
-import com.algaworks.algaworkscurso.domain.model.Cozinha;
 import com.algaworks.algaworkscurso.domain.model.Restaurante;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
@@ -24,4 +22,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 //    @Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
     List<Restaurante> consultarPorNome(@Param("nome") String nome, @Param("id") Long id);
 
+    List<Restaurante> find(String nome,
+                           BigDecimal taxaFreteInicial,
+                           BigDecimal taxaFreteFinal);
 }

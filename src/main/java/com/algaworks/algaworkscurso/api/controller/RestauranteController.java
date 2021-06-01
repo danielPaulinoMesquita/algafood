@@ -162,4 +162,11 @@ public class RestauranteController {
             return new ResponseEntity<>(restaurantes, HttpStatus.NO_CONTENT);
         }
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/por-nome-e-frete")
+    public List<Restaurante> existe(String nome,
+                                    BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+        return restauranteRepository.find(nome,taxaFreteInicial,taxaFreteFinal);
+    }
 }
