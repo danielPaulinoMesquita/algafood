@@ -165,8 +165,8 @@ public class RestauranteController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/por-nome-e-frete")
-    public List<Restaurante> existe(@RequestParam String nome,
-                                    @RequestParam BigDecimal taxaFreteInicial, @RequestParam BigDecimal taxaFreteFinal) {
+    public List<Restaurante> existe(String nome,
+                                     BigDecimal taxaFreteInicial,  BigDecimal taxaFreteFinal) {
         return restauranteRepository.find(nome,taxaFreteInicial,taxaFreteFinal);
     }
 }
