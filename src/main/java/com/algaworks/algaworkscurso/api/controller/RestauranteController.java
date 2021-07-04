@@ -5,6 +5,8 @@ import com.algaworks.algaworkscurso.domain.exception.EntidadeNaoEncontradaExcept
 import com.algaworks.algaworkscurso.domain.model.Restaurante;
 import com.algaworks.algaworkscurso.domain.repository.RestauranteRepository;
 import com.algaworks.algaworkscurso.domain.service.CadastroRestauranteService;
+import com.algaworks.algaworkscurso.infrastructure.repository.spec.RestauraneComNomeSemelhanteSpec;
+import com.algaworks.algaworkscurso.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,5 +170,14 @@ public class RestauranteController {
     public List<Restaurante> existe(String nome,
                                      BigDecimal taxaFreteInicial,  BigDecimal taxaFreteFinal) {
         return restauranteRepository.find(nome,taxaFreteInicial,taxaFreteFinal);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/com-frete-gratis")
+    public List<Restaurante> restauranteComFreteGratis(String nome) {
+        var comFreteGratis =  new RestauranteComFreteGratisSpec();
+        var comNomeSemelhante = new RestauraneComNomeSemelhanteSpec(nome);
+
+        return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
     }
 }
