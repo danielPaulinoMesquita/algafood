@@ -5,6 +5,7 @@ import com.algaworks.algaworkscurso.domain.exception.EntidadeNaoEncontradaExcept
 import com.algaworks.algaworkscurso.domain.model.Restaurante;
 import com.algaworks.algaworkscurso.domain.repository.RestauranteRepository;
 import com.algaworks.algaworkscurso.domain.service.CadastroRestauranteService;
+import static com.algaworks.algaworkscurso.infrastructure.repository.spec.RestauranteSpecs.*;
 import com.algaworks.algaworkscurso.infrastructure.repository.spec.RestauraneComNomeSemelhanteSpec;
 import com.algaworks.algaworkscurso.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -175,9 +176,6 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/com-frete-gratis")
     public List<Restaurante> restauranteComFreteGratis(String nome) {
-        var comFreteGratis =  new RestauranteComFreteGratisSpec();
-        var comNomeSemelhante = new RestauraneComNomeSemelhanteSpec(nome);
-
-        return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
     }
 }
