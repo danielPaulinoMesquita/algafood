@@ -177,4 +177,9 @@ public class RestauranteController {
     public List<Restaurante> restauranteComFreteGratis(String nome) {
         return restauranteRepository.findComFreteGratis(nome);
     }
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/primeiro")
+    public Optional<Restaurante> restaurantePrimeiro() {
+        return restauranteRepository.buscarPrimeiro();
+    }
 }
